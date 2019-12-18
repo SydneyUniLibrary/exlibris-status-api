@@ -30,9 +30,7 @@ The project uses the [serverless framework](https://serverless.com/) to spin up 
 
 5. To deploy this project, you'll need AWS credentials that are configured locally using the `awscli` Python library. Make sure `awscli` is installed ()`pip3 install awscli`) and then run `aws configure`. One at a time, you will enter an AWS Access Key ID, AWS Secret Access Key, server region, and default output format (just use `json`). (If you need help configuring your AWS credentials locally, [this should help](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html#cli-quick-configuration).)
 
-6. The, we'll need to create a single item (row) in this DB, which will be constantly updated and overwritten. (You'll only have one item (row) here, for now at least, because we're only checking on one product (Primo) and it has one server.) In your new table, click on `Items`, then `Create Item`. In the `Create Item` window, click on the left-hand dropdown and switch the view from `Tree` to `Text`. Tick the `DynamoDB JSON` box and paste the contents of the repo file `dynamo_starter.json` into the window. Click `Save`.
-
-7. The Python handler for interacting with the ExL API is by default set to the `Primo MT NA04` server here in `dynamo_updater.py`:
+6. The Python handler for interacting with the ExL API is by default set to the `Primo MT NA04` server here in `dynamo_updater.py`:
 
  ```python
  body = {"act": "get_status", "client": "xml", "envs": "Primo MT NA04"}
@@ -42,9 +40,9 @@ The project uses the [serverless framework](https://serverless.com/) to spin up 
  ```
  You should probably check which server your Primo dev/sandbox instances run on and use that instead!
 
-8. Make sure Docker is also up and running, then run: `sls deploy`
+7. Make sure Docker is also up and running, then run: `sls deploy`
 
-9. Serverless will run for a while, packaging up your stuff and deploying it to AWS. Eventually you should end up with a message in your CLI like the one below.  
+8. Serverless will run for a while, packaging up your stuff and deploying it to AWS. Eventually you should end up with a message in your CLI like the one below.  
 
  ![serverless response](https://raw.githubusercontent.com/scottythered/exlibris-status-api/master/img/cli.png)
 

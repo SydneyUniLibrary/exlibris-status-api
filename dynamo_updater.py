@@ -82,8 +82,13 @@ def handler(event, context):
     table = dynamodb.Table(os.environ["table"])
     response = table.get_item(Key={"product": "Primo"})
 
+    try:
+        prev_raw_api_response = response["Item"]["raw_api_response"]
+    except KeyError:
+        prev_raw_api_response = None
+
     # if status is the same, only change the update date; if different, update entire DynamoDB entry
-    if response["Item"]["raw_api_response"] == raw_exlib_api_status:
+    if prev_raw_api_response == raw_exlib_api_status:
         table.update_item(
             Key={"product": "Primo"},
             UpdateExpression="SET last_update = :val1",
@@ -292,20 +297,17 @@ def handler(event, context):
             asu_api["maintenance_message"] = "unknown"
             asu_api["maintenance_date"] = "unknown"
 
-        table.update_item(
-            Key={"product": "Primo"},
-            UpdateExpression=(
-                "SET last_update = :val1, affected_env = :val2, maintenance = :val3, "
-                "maintenance_message = :val4, raw_api_response = :val5, "
-                "service_status = :val6, maintenance_date = :val7"
-            ),
-            ExpressionAttributeValues={
-                ":val1": now,
-                ":val2": asu_api["affected_env"],
-                ":val3": asu_api["maintenance"],
-                ":val4": asu_api["maintenance_message"],
-                ":val5": raw_exlib_api_status,
-                ":val6": asu_api["service_status"],
-                ":val7": asu_api["maintenance_date"],
+        table.put_item(
+            Item={
+                "affected_env": asu_api["affected_env"],
+                "last_update": now,
+                "maintenance": asu_api["maintenance"],
+                "maintenance_date": asu_api["maintenance_date"],
+                "maintenance_message": asu_api["maintenance_message"],
+                "product": "Primo",
+                "raw_api_response": str(raw_exlib_api_status),
+                "service_status": asu_api["service_status"],
+                "system_id": asu_api["system_id"],
             },
+            ReturnValues='NONE',
         )
