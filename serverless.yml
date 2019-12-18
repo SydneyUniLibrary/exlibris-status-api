@@ -11,7 +11,8 @@
 #
 # Happy Coding!
 
-service: exlib-status-api
+service:
+  name: exlib-status-api
 # app and org for use with dashboard.serverless.com
 #app: your-app-name
 #org: your-org-name
@@ -26,7 +27,7 @@ provider:
   region: ${file(auth.json):region_name}
   stage: dev
   environment:
-    table: ${file(auth.json):table}
+    table: { 'Ref': ['Table'] }
   iamRoleStatements:
     - Effect: Allow
       Action:
