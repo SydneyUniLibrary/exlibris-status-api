@@ -6,12 +6,7 @@ import boto3
 import os
 
 
-dynamodb = boto3.resource(
-    "dynamodb",
-    region_name=os.environ["region_name"],
-    aws_access_key_id=os.environ["access_key"],
-    aws_secret_access_key=os.environ["secret_access"],
-)
+dynamodb = boto3.resource("dynamodb")
 
 table = dynamodb.Table(os.environ["table"])
 

@@ -26,10 +26,20 @@ provider:
   region: ${file(auth.json):region_name}
   stage: dev
   environment:
-    access_key: ${file(auth.json):aws_access_key_id}
-    secret_access: ${file(auth.json):aws_secret_access_key}
-    region_name: ${file(auth.json):region_name}
     table: ${file(auth.json):table}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - 'dynamodb:Query'
+        - 'dynamodb:Scan'
+        - 'dynamodb:BatchGetItem'
+        - 'dynamodb:GetItem'
+        - 'dynamodb:BatchWriteItem'
+        - 'dynamodb:DeleteItem'
+        - 'dynamodb:PutItem'
+        - 'dynamodb:UpdateItem'
+      Resource:
+        - 'Fn::GetAtt': ['Table', 'Arn']
 
 # you can overwrite defaults here
 #  stage: dev
