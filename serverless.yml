@@ -65,11 +65,11 @@ provider:
 #    - exclude-me-dir/**
 
 functions:
-  dynamo_updater:
+  DynamoUpdater:
     handler: dynamo_updater.handler
     events:
       - schedule: rate(10 minutes)
-  webAPI:
+  WebAPI:
     handler: webAPI.handler
     events:
       - http:
