@@ -12,6 +12,7 @@ import os
 
 EX_LIBRIS_ENV = os.environ["EX_LIBRIS_ENV"]
 LOCAL_TZ = os.environ["LOCAL_TZ"]
+LIBRARY_SEARCH_NAME = os.environ.get("LIBRARY_SEARCH_NAME", "Library Search")
 
 
 def utc_time_now():
@@ -70,6 +71,21 @@ def changeomatic(raw_input):
     first_pass = matcherator("front", raw_input)
     second_pass = matcherator("back", first_pass)
     return second_pass
+
+
+def routine_maintenance_message(maintenance_start, maintenance_stop):
+    start_tzname = maintenance_start.tzname()
+    end_tzname = maintenance_stop.tzname()
+    start = maintenance_start.strftime(
+        "%d %b at %I:%M %p"
+        if start_tzname == end_tzname else
+        "%d %b at %I:%M %p %Z"
+    )
+    stop = maintenance_stop.strftime("%d %b at %I:%M %p %Z")
+    return (
+        f"Due to routine maintenance, {LIBRARY_SEARCH_NAME} may be unavailable between {start} and {stop}. "
+        "We apologize for the inconvenience."
+    )
 
 
 def handler(event, context):
@@ -186,11 +202,7 @@ def handler(event, context):
                     message_time_parse(earliest_exlib_api_status, "stop")
                 )
                 asu_api["maintenance_message"] = (
-                    "Due to routine maintenance, Library One Search may be unavailable between {0} and {1}, Phoenix time. "
-                    "We apologize for the inconvenience.".format(
-                        (asu_api["maintenance_start"]).strftime("%b %d at %I:%M %p"),
-                        (asu_api["maintenance_stop"]).strftime("%b %d at %I:%M %p"),
-                    )
+                    routine_maintenance_message(asu_api["maintenance_start"], asu_api["maintenance_stop"])
                 )
                 asu_api["maintenance_date"] = (
                     message_time_parse(parsed_exlib_api_status, "start")
@@ -218,11 +230,7 @@ def handler(event, context):
                 message_time_parse(parsed_exlib_api_status, "stop")
             )
             asu_api["maintenance_message"] = (
-                "Due to routine maintenance, Library One Search may be unavailable between {0} and {1}, Phoenix time. "
-                "We apologize for the inconvenience.".format(
-                    (asu_api["maintenance_start"]).strftime("%b %d at %I:%M %p"),
-                    (asu_api["maintenance_stop"]).strftime("%b %d at %I:%M %p"),
-                )
+                routine_maintenance_message(asu_api["maintenance_start"], asu_api["maintenance_stop"])
             )
             asu_api["maintenance_date"] = (
                 message_time_parse(parsed_exlib_api_status, "start")
@@ -264,13 +272,7 @@ def handler(event, context):
                         message_time_parse(parsed_exlib_api_status, "stop")
                     )
                     asu_api["maintenance_message"] = (
-                        "Due to routine maintenance, Library One Search may be unavailable between {0} and {1}, Phoenix time. "
-                        "We apologize for the inconvenience.".format(
-                            (asu_api["maintenance_start"]).strftime(
-                                "%b %d at %I:%M %p"
-                            ),
-                            (asu_api["maintenance_stop"]).strftime("%b %d at %I:%M %p"),
-                        )
+                        routine_maintenance_message(asu_api["maintenance_start"], asu_api["maintenance_stop"])
                     )
                     asu_api["maintenance_date"] = (
                         message_time_parse(parsed_exlib_api_status, "start")
