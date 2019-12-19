@@ -10,20 +10,22 @@ import boto3
 import os
 
 
+LOCAL_TZ = os.environ["LOCAL_TZ"]
+
+
 def utc_time_now():
-    from_zone = tz.gettz("UTC")
-    return (datetime.utcnow()).replace(tzinfo=from_zone)
+    return datetime.now(tz.UTC)
 
 
-def utc_to_phoenix_time(time):
-    from_zone = tz.gettz("UTC")
-    to_zone = tz.gettz("America/Phoenix")
-    time_zoned = time.replace(tzinfo=from_zone)
+def utc_to_local_time(time):
+    to_zone = tz.gettz(LOCAL_TZ)
+    time_zoned = time.replace(tzinfo=tz.UTC)
     return time_zoned.astimezone(to_zone)
 
 
-def phoenix_time_now():
-    return utc_to_phoenix_time(utc_time_now())
+def local_time_now():
+    to_zone = tz.gettz(LOCAL_TZ)
+    return datetime.now(to_zone)
 
 
 def message_time_parse(text, mode):
@@ -71,7 +73,7 @@ def changeomatic(raw_input):
 
 def handler(event, context):
     # get current time, check ExL's api
-    now = (utc_to_phoenix_time(utc_time_now())).strftime("%Y-%m-%d %H:%M")
+    now = local_time_now().strftime("%Y-%m-%d %H:%M")
     body = {"act": "get_status", "client": "xml", "envs": "Primo MT NA04"}
     raw_exlib_api_status = (
         requests.post("https://status.exlibrisgroup.com/?page_id=5511", data=body)
@@ -140,10 +142,10 @@ def handler(event, context):
                 asu_api["affected_env"] = env.group(1)
                 asu_api["service_status"] = "OK, Maintenance Scheduled"
                 asu_api["maintenance"] = True
-                asu_api["maintenance_start"] = utc_to_phoenix_time(
+                asu_api["maintenance_start"] = utc_to_local_time(
                     message_time_parse(changed_exlib_api_status, "start")
                 )
-                asu_api["maintenance_stop"] = utc_to_phoenix_time(
+                asu_api["maintenance_stop"] = utc_to_local_time(
                     message_time_parse(changed_exlib_api_status, "stop")
                 )
                 asu_api["maintenance_message"] = (
@@ -176,10 +178,10 @@ def handler(event, context):
                 asu_api["affected_env"] = env.group(1)
                 asu_api["service_status"] = "OK, Maintenance Scheduled"
                 asu_api["maintenance"] = True
-                asu_api["maintenance_start"] = utc_to_phoenix_time(
+                asu_api["maintenance_start"] = utc_to_local_time(
                     message_time_parse(earliest_exlib_api_status, "start")
                 )
-                asu_api["maintenance_stop"] = utc_to_phoenix_time(
+                asu_api["maintenance_stop"] = utc_to_local_time(
                     message_time_parse(earliest_exlib_api_status, "stop")
                 )
                 asu_api["maintenance_message"] = (
@@ -208,10 +210,10 @@ def handler(event, context):
         ):
             asu_api["service_status"] = "Maintenance In-Progress"
             asu_api["maintenance"] = True
-            asu_api["maintenance_start"] = utc_to_phoenix_time(
+            asu_api["maintenance_start"] = utc_to_local_time(
                 message_time_parse(parsed_exlib_api_status, "start")
             )
-            asu_api["maintenance_stop"] = utc_to_phoenix_time(
+            asu_api["maintenance_stop"] = utc_to_local_time(
                 message_time_parse(parsed_exlib_api_status, "stop")
             )
             asu_api["maintenance_message"] = (
@@ -254,10 +256,10 @@ def handler(event, context):
                     asu_api["affected_env"] = env.group(1)
                     asu_api["service_status"] = "OK, Maintenance Scheduled"
                     asu_api["maintenance"] = True
-                    asu_api["maintenance_start"] = utc_to_phoenix_time(
+                    asu_api["maintenance_start"] = utc_to_local_time(
                         message_time_parse(parsed_exlib_api_status, "start")
                     )
-                    asu_api["maintenance_stop"] = utc_to_phoenix_time(
+                    asu_api["maintenance_stop"] = utc_to_local_time(
                         message_time_parse(parsed_exlib_api_status, "stop")
                     )
                     asu_api["maintenance_message"] = (
