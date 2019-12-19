@@ -10,6 +10,7 @@ import boto3
 import os
 
 
+EX_LIBRIS_ENV = os.environ["EX_LIBRIS_ENV"]
 LOCAL_TZ = os.environ["LOCAL_TZ"]
 
 
@@ -74,7 +75,7 @@ def changeomatic(raw_input):
 def handler(event, context):
     # get current time, check ExL's api
     now = local_time_now().strftime("%Y-%m-%d %H:%M")
-    body = {"act": "get_status", "client": "xml", "envs": "Primo MT NA04"}
+    body = {"act": "get_status", "client": "xml", "envs": EX_LIBRIS_ENV}
     raw_exlib_api_status = (
         requests.post("https://status.exlibrisgroup.com/?page_id=5511", data=body)
     ).text

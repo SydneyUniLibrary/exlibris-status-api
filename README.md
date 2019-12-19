@@ -30,13 +30,12 @@ The project uses the [serverless framework](https://serverless.com/) to spin up 
 
 5. To deploy this project, you'll need AWS credentials that are configured locally using the `awscli` Python library. Make sure `awscli` is installed ()`pip3 install awscli`) and then run `aws configure`. One at a time, you will enter an AWS Access Key ID, AWS Secret Access Key, server region, and default output format (just use `json`). (If you need help configuring your AWS credentials locally, [this should help](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html#cli-quick-configuration).)
 
-6. The Python handler for interacting with the ExL API is by default set to the `Primo MT NA04` server here in `dynamo_updater.py`:
+6. The Python handler for interacting with the ExL API is by default set to the `Primo VE AP01` server here in `serverless.yml`:
 
- ```python
- body = {"act": "get_status", "client": "xml", "envs": "Primo MT NA04"}
- raw_exlib_api_status = (
-  requests.post("https://status.exlibrisgroup.com/?page_id=5511", data=body)
-   ).text
+ ```yaml
+  environment:
+    EX_LIBRIS_ENV: 'Primo VE AP01'
+    LOCAL_TZ: 'Australia/Sydney'
  ```
  You should probably check which server your Primo dev/sandbox instances run on and use that instead!
 
@@ -57,7 +56,7 @@ The listed GET endpoint will let you access the data parsed from the ExL API. Fo
   "last_update": "2019-12-17 14:32",
   "maintenance_message": "NA",
   "maintenance_date": "NA",
-  "system_id": "Primo MT NA04",
+  "system_id": "Primo VE AP01",
   ...
 }
 ```
@@ -73,7 +72,7 @@ But when a maintenance message is posted:
   "last_update": "2019-12-17 14:27",
   "maintenance_message": "Due to routine maintenance, Library One Search may be unavailable between Nov 09 at 11:00 PM and Nov 10 at 03:00 AM, Phoenix time. We apologize for the inconvenience.",
   "maintenance_date": "2019-11-10 06:00",
-  "system_id": "Primo MT NA04",
+  "system_id": "Primo VE AP01",
   ...
 }
 ```
