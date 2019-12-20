@@ -174,7 +174,7 @@ def handler(event, context):
                 )
                 asu_api["maintenance_date"] = (
                     message_time_parse(parsed_exlib_api_status, "start")
-                ).strftime("%Y-%m-%d %H:%M")
+                ).strftime("%Y-%m-%dT%H:%M:%SZ")
 
             elif len(new_root.xpath("/exlibriscloudstatus/instance/schedule/*")) > 1:
                 temp = []
@@ -206,7 +206,7 @@ def handler(event, context):
                 )
                 asu_api["maintenance_date"] = (
                     message_time_parse(parsed_exlib_api_status, "start")
-                ).strftime("%Y-%m-%d %H:%M")
+                ).strftime("%Y-%m-%dT%H:%M:%SZ")
             else:
                 asu_api["service_status"] = "OK"
                 asu_api["maintenance"] = False
@@ -234,7 +234,7 @@ def handler(event, context):
             )
             asu_api["maintenance_date"] = (
                 message_time_parse(parsed_exlib_api_status, "start")
-            ).strftime("%Y-%m-%d %H:%M")
+            ).strftime("%Y-%m-%dT%H:%M:%SZ")
             try:
                 env = re.search(
                     "on your Primo (Sandbox|Production) environment",
@@ -276,7 +276,7 @@ def handler(event, context):
                     )
                     asu_api["maintenance_date"] = (
                         message_time_parse(parsed_exlib_api_status, "start")
-                    ).strftime("%Y-%m-%d %H:%M")
+                    ).strftime("%Y-%m-%dT%H:%M:%SZ")
                 else:
                     asu_api["service_status"] = "OK, Maintenance Completed"
                     asu_api["affected_env"] = "NA"
