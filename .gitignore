@@ -1,6 +1,9 @@
 # Files containing secrets
 auth.json
 
+# Random working-state files
+var/
+
 
 #-------------------------------------------------------------------------------
 # https://github.com/github/gitignore/blob/master/Python.gitignore
