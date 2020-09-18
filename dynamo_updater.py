@@ -127,7 +127,7 @@ def handler(event, context):
             asu_api["maintenance_start"] = "NA"
             asu_api["maintenance_stop"] = "NA"
             asu_api["maintenance_message"] = (
-                "One Search is currently experiencing service interruptions. "
+                f"{LIBRARY_SEARCH_NAME} is currently experiencing service interruptions. "
                 "We appreciate your understanding while we work to resolve this issue."
             )
             asu_api["maintenance_date"] = "NA"
@@ -168,11 +168,7 @@ def handler(event, context):
                         message_time_parse(changed_exlib_api_status, "stop")
                     )
                     asu_api["maintenance_message"] = (
-                        "Due to routine maintenance, Library One Search may be unavailable between {0} and {1}, Phoenix time. "
-                        "We apologize for the inconvenience.".format(
-                            (asu_api["maintenance_start"]).strftime("%b %d at %I:%M %p"),
-                            (asu_api["maintenance_stop"]).strftime("%b %d at %I:%M %p"),
-                        )
+                        routine_maintenance_message(asu_api["maintenance_start"], asu_api["maintenance_stop"])
                     )
                     asu_api["maintenance_date"] = (
                         message_time_parse(changed_exlib_api_status, "start")
@@ -334,11 +330,7 @@ def handler(event, context):
                         message_time_parse(parsed_exlib_api_status, "stop")
                     )
                     asu_api["maintenance_message"] = (
-                        "Due to routine maintenance, Library One Search may be unavailable between {0} and {1}, Phoenix time. "
-                        "We apologize for the inconvenience.".format(
-                            (asu_api["maintenance_start"]).strftime("%b %d at %I:%M %p"),
-                            (asu_api["maintenance_stop"]).strftime("%b %d at %I:%M %p"),
-                        )
+                        routine_maintenance_message(asu_api["maintenance_start"], asu_api["maintenance_stop"])
                     )
                     asu_api["maintenance_date"] = (
                         message_time_parse(parsed_exlib_api_status, "start")
